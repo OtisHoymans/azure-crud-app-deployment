@@ -4,7 +4,7 @@
 az group create --name crudapp-rg --location eastus  
 
 # Create the ACR by deploying the acr.bicep template.
-az deployment group create --resource-group crudapp-rg --template-file acr.bicep
+az deployment group create --resource-group crudapp-rg --template-file bicepcode/acr.bicep
 
 # Get the ACR login server and name after the deployment is successful
 ACR_LOGIN_SERVER=$(az deployment group show --resource-group crudapp-rg --name $(az deployment group list --resource-group crudapp-rg --query "[0].name" -o tsv) --query "properties.outputs.acrLoginServer.value" -o tsv)
@@ -23,4 +23,4 @@ echo "ACR Login Server: $ACR_LOGIN_SERVER"
 echo "ACR Name: $ACR_NAME"
 
 # Deploy the 'main.bicep' template, which deploys 'infra.bicep' and 'app.bicep' to finally deploy the application on Azure. 
-az deployment group create --resource-group crudapp-rg --template-file main.bicep --parameters acrLoginServer=$ACR_LOGIN_SERVER
+az deployment group create --resource-group crudapp-rg --template-file bicepcode/main.bicep --parameters acrLoginServer=$ACR_LOGIN_SERVER
