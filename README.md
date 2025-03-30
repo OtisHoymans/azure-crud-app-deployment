@@ -5,7 +5,7 @@ This project was made by Otis Hoymans, a second year Cloud & Cybersecurity stude
 
 ## Azure Design Diagram
 
-
+![alt text](designdiagram.png)
 
 ## How the Application Works
 The application is a Flask-based CRUD app running inside a Docker container, deployed to Azure using Azure Container Instances (ACI). It allows users to perform Create, Read, Update, and Delete (CRUD) operations via a web interface. The application is exposed to the internet via an Azure Application Gateway, which routes traffic to the container instance securely.
