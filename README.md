@@ -7,10 +7,42 @@ This project was made by Otis Hoymans, a second year Cloud & Cybersecurity stude
 
 ![alt text](designdiagram.png)
 
+## Architecture Components
+
+### Networking
+- **Virtual Network (10.0.0.0/16)**: Primary network that isolates all deployment resources
+- **Container Subnet (10.0.1.0/24)**: Dedicated subnet with ACI delegation for container instances
+- **App Gateway Subnet (10.0.2.0/24)**: Separate subnet for the Application Gateway
+- **Network Security Group**: Controls traffic flow with rules allowing HTTP (port 80) inbound traffic
+
+### Compute & Container Resources
+- **Azure Container Registry (Basic tier)**: Stores and manages the container image securely
+- **Container Instance**: Linux-based container running with 1 CPU and 1GB memory allocation
+- **Container Image**: Custom Flask CRUD application based on the example repository
+
+### Access & Security
+- **Application Gateway**: Provides public access, load balancing, and routing
+- **Public IP Address (Static)**: Enables external access to the application
+- **NSG Rules**: Enforces security by allowing only necessary traffic
+
+### Monitoring
+- **Log Analytics Workspace**: Collects and stores container logs for 30 days
+
 ## How the Application Works
-The application is a Flask-based CRUD app running inside a Docker container, deployed to Azure using Azure Container Instances (ACI). It allows users to perform Create, Read, Update, and Delete (CRUD) operations via a web interface. The application is exposed to the internet via an Azure Application Gateway, which routes traffic to the container instance securely.
+The application is a Flask-based CRUD app created by Gürkan Akdeniz (https://github.com/gurkanakdeniz/example-flask-crud) running inside a Docker container, deployed to Azure using Azure Container Instances (ACI). It allows users to perform Create, Read, Update, and Delete (CRUD) operations via a web interface. The application is exposed to the internet via an Azure Application Gateway, which routes traffic to the container instance securely.
+
+## Bicep Template Structure
+- **acr.bicep**: Creates and configures the Azure Container Registry
+- **infra.bicep**: Deploys network infrastructure, security, and monitoring components
+- **app.bicep**: Provisions the container instance and Application Gateway
+- **main.bicep**: Orchestrates the deployment of all modules
 
 ## Deployment Instructions
+
+### Prerequisites
+- Azure CLI installed and logged in
+- Docker installed locally
+- Access to a bash terminal
 
 ### Running the Deployment Script
 To deploy the application, execute the provided `deployment.sh` script:
@@ -38,6 +70,13 @@ Then, open your browser and navigate to:
 http://<public-ip>
 ```
 
----
+## Resource Optimization
+- Container instances are configured with minimal but sufficient resources (1 CPU, 1GB RAM).
+- Log retention is set to 30 days to balance monitoring needs with cost efficiency.
+- Basic tier ACR is used.
 
-
+## Security Implementation
+- Private IP for container instances, not directly exposed to the internet.
+- App Gateway serves as a security boundary for incoming traffic.
+- NSG rules restrict traffic to only necessary ports.
+- All resources deployed within isolated virtual network segments.
